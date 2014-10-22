@@ -15,6 +15,9 @@ DEFAULT_MESSAGES = [
     {'message': 'Welcome! (this is the built-in first message)'},
 ]
 
+def default_wall_list():
+    return DEFAULT_MESSAGES
+
 
 def wall_error(error):
     """Handle API errors.

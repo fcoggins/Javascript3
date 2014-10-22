@@ -2,7 +2,7 @@ import json
 
 from flask import Flask, request, render_template, make_response
 
-from api import wall_list, wall_add, wall_error
+from api import wall_list, wall_add, wall_error, default_wall_list
 
 
 app = Flask(__name__)
@@ -44,6 +44,13 @@ def _convert_to_JSON(result):
     response.mimetype = "application/json"
 
     return response
+
+@app.route("/api/default/wall/list")
+def get_default_message():
+    """ Return the message strip in the DEFAULT MESSAGE variable in 
+        the api.py file """
+    result = default_wall_list()
+    return _convert_to_JSON(result)
 
 
 @app.route("/api/wall/list")
