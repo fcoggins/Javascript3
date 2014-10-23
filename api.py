@@ -16,6 +16,12 @@ DEFAULT_MESSAGES = [
 ]
 
 def default_wall_list():
+    """ remove old messages from the global session dictionary
+         when called by clear."""
+
+    session.clear()
+    # del session['wall']  <-- could use this to delete just the "wall" key
+
     return DEFAULT_MESSAGES
 
 
@@ -57,6 +63,8 @@ def wall_add(msg):
     }
 
     session.setdefault('wall', []).append(wall_dict)
+    
+    print 0.0, session
 
     result = wall_list()
     result["result"] = "Message Received"

@@ -8,15 +8,9 @@ $(document).ready(function () {
     
     getMessages();
     $("#message-send").prop('disabled', false);
-    $("#message-send").click(function() {
-                                        var message_send =  $(this);
-                                        message_send.prop('disabled', true);
-                                        setTimeout(function() {
-                                            message_send.prop('disabled', false);
-                                                              }, 5000);
-
-                                        }
-                                    );
+    // $("#message-send").click(function() {
+                                       
+    //                                 );
     $("#message-clear").click(
                               function(
                                 ){
@@ -40,6 +34,13 @@ function handleFormSubmit(evt) {
 
     // Reset the message container to be empty
     textArea.val("");
+
+    var message_send =  $("#message-send");
+    message_send.prop('disabled', true);
+    setTimeout(function() {
+        message_send.prop('disabled', false);
+    }, 5000);
+
 }
 
 
@@ -76,15 +77,42 @@ function addMessage(msg) {
 
 function formatNewMessages(results) {
     //loop over things in messages
-    // create html to populate a table
-    //<li class="list-group-item">Placeholder message #1</li>
+    //  create html to populate a table
+    //    <li class="list-group-item">Placeholder message #1</li>
     var msgs = results["messages"];
     var new_msg_list_html = "";
     for (var i = 0; i < msgs.length; i++){
         new_msg_list_html +='<li class="list-group-item">' + msgs[i]['message'] + '</li>';
     }
+    // $(results.messages).each(function(msg){
+    //             var message_text = results.messages[msg].message;
+    //             $('#message-container').empty().append('<li class="list-group-item">'+ message_text + '</li>');
+    //                                     }
+    //                      );
+
     return new_msg_list_html;
 }
+
+// Got this fuction from Wendy D. She used the JQuery "each" method to create the HTML code around 
+//   the individual messages in the "session" dictionary.
+// function getMessages() {
+//     $.get(
+//         "/api/wall/list",
+//         function (data) {
+//             console.log(data);
+//             $("#message-container").empty();
+
+//             $(data.messages).each(function(msg){
+//                 var message_text = data.messages[msg].message;
+//                 $('#message-container').append('<li class="list-group-item">'+ message_text + '</li>');
+//             });
+//         }
+//     );
+// }
+
+
+
+
 
 function getMessages() {
     // AJAX call here to /api/wall/list
@@ -95,6 +123,8 @@ function getMessages() {
     $.get(
         "/api/wall/list",
         function(results) {
+            // formatNewMessages(results);
+            // This code is not needed if we use Wendy D.'s 'each" method
             new_msg_list_html = formatNewMessages(results);
             $("#message-container").empty().html(new_msg_list_html);
                     }

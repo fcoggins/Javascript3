@@ -4,6 +4,7 @@ from flask import Flask, request, render_template, make_response
 
 from api import wall_list, wall_add, wall_error, default_wall_list
 
+from HTMLParser import HTMLParser
 
 app = Flask(__name__)
 
@@ -14,6 +15,13 @@ app = Flask(__name__)
 # os.environ['MY_SECRET_KEY']. For our exercise purposes, though, it's
 # fine to have this here.
 app.secret_key = 'a4c96d59-57a8-11e4-8b97-80e6500ee2f6'
+
+# create a subclass and override the handler methods because the default
+#  in the HTMLParser class is "pass" or do nothing.
+class MyHTMLParser(HTMLParser):
+    data = ""
+    def handle_data(self, data):
+        self.data = self.data + data
 
 
 @app.route("/")
@@ -70,6 +78,10 @@ def add_message():
     # this is the equivalent for getting things from a POST response)
     msg = request.form.get('m').strip()
 
+    parser = MyHTMLParser()
+    parser.feed(msg)
+    print ("parsed input = ", parser.data)
+    
     if msg is None:
         result = wall_error("You did not specify a message to set.")
 
@@ -77,6 +89,8 @@ def add_message():
         result = wall_error("Your message is empty")
 
     else:
+        if parser.data:
+           msg = parser.data
         result = wall_add(msg)
 
     return _convert_to_JSON(result)
